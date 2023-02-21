@@ -10,6 +10,9 @@ const setDefaultPluginOptions = (store, plugin) => {
 
 const migrations = {
 	">=1.20.0": (store) => {
+		setDefaultPluginOptions(store, "api");
+	},
+	">=1.20.0": (store) => {
 		setDefaultPluginOptions(store, "visualizer");
 	},
 	">=1.17.0": (store) => {
