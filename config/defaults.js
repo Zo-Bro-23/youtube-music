@@ -165,9 +165,6 @@ const defaultConfig = {
 				],
 			},
 		},
-		api: {
-			enabled: false,
-		},
 	},
 };
 
