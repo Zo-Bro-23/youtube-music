@@ -16,34 +16,49 @@ module.exports = (win) => {
                 })
         }
 
+        const post = () => {
+            axios.post("https://youtube-music-api.zohan.tech/api/status", { key: getOptions("m-api").key, ...currentSongInfo })
+                .catch(err => {
+                    console.log(err.message, err.stack, currentSongInfo)
+                })
+        }
+
         let currentSongInfo
+        let likeStatus = 'UNKNOWN'
 
         registerCallback(songInfo => {
             currentSongInfo = songInfo
-            axios.post("https://youtube-music-api.zohan.tech/api/status", { key: getOptions("m-api").key, ...songInfo })
-                .catch(err => {
-                    console.log(err.message, err.stack, songInfo)
-                })
+            currentSongInfo.likeStatus = likeStatus
+            post()
         })
 
         ipcMain.on('timeChanged', (_, t) => {
             if (currentSongInfo) {
                 currentSongInfo.elapsedSeconds = t
-                axios.post("https://youtube-music-api.zohan.tech/api/status", { key: getOptions("m-api").key, ...currentSongInfo })
-                    .catch(err => {
-                        console.log(err.message, err.stack, currentSongInfo)
-                    })
+                post()
+            }
+        })
+
+        ipcMain.on('m-api-like-button-status', (_, status) => {
+            likeStatus = status
+            if (currentSongInfo) {
+                currentSongInfo.likeStatus = likeStatus
+                post()
             }
         })
 
         pollControls();
 
         async function pollControls() {
-            const response = await axios.get(`https://youtube-music-api.zohan.tech/api/controls?key=${getOptions("m-api").key}`)
-            const songControls = getSongControls(win);
-            response.data.controls.forEach(control => {
-                songControls[control]();
-            })
+            try {
+                const response = await axios.get(`https://youtube-music-api.zohan.tech/api/controls?key=${getOptions("m-api").key}`)
+                const songControls = getSongControls(win);
+                response.data.controls.forEach(control => {
+                    songControls[control]();
+                })
+            } catch (err) {
+                console.log(err.message, err.stack)
+            }
             setTimeout(pollControls, 100);
         }
     })
