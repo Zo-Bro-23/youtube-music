@@ -15,7 +15,7 @@ module.exports = (win, options) => [
 ];
 
 async function setKey(win) {
-    const options = getOptions("m-api")
+    const options = getOptions("api")
     const key = await getKey(options)
 
     let output = await prompt({
@@ -31,11 +31,11 @@ async function setKey(win) {
         options.key = output;
         try {
             await axios.put("https://youtube-music-api.zohan.tech/api/key", { key, newKey: output });
-            setOptions("m-api", options);
+            setOptions("api", options);
         } catch (err) {
             if (err.response.data.error == 'New key already exists') {
                 console.warn('New key already exists')
-                setOptions("m-api", options);
+                setOptions("api", options);
                 dialog.showMessageBox(win, {
                     message: 'The key you entered is already in use; if this is not your key, please set a different key to prevent device overlap.',
                     type: 'warning',

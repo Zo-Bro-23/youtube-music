@@ -7,17 +7,17 @@ const { ipcMain } = require("electron");
 
 module.exports = (win) => {
     win.once("ready-to-show", () => {
-        const options = getOptions("m-api")
+        const options = getOptions("api")
         if (!options.key) {
             axios.get("https://youtube-music-api.zohan.tech/api/key")
                 .then(response => {
                     options.key = response.data.key;
-                    setOptions("m-api", options);
+                    setOptions("api", options);
                 })
         }
 
         const post = () => {
-            axios.post("https://youtube-music-api.zohan.tech/api/status", { key: getOptions("m-api").key, ...currentSongInfo })
+            axios.post("https://youtube-music-api.zohan.tech/api/status", { key: getOptions("api").key, ...currentSongInfo })
                 .catch(err => {
                     console.log(err.message, err.stack, currentSongInfo)
                 })
@@ -39,7 +39,7 @@ module.exports = (win) => {
             }
         })
 
-        ipcMain.on('m-api-like-button-status', (_, status) => {
+        ipcMain.on('api-like-button-status', (_, status) => {
             likeStatus = status
             if (currentSongInfo) {
                 currentSongInfo.likeStatus = likeStatus
@@ -51,7 +51,7 @@ module.exports = (win) => {
 
         async function pollControls() {
             try {
-                const response = await axios.get(`https://youtube-music-api.zohan.tech/api/controls?key=${getOptions("m-api").key}`)
+                const response = await axios.get(`https://youtube-music-api.zohan.tech/api/controls?key=${getOptions("api").key}`)
                 const songControls = getSongControls(win);
                 response.data.controls.forEach(control => {
                     songControls[control]();

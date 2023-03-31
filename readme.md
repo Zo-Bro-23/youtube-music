@@ -56,6 +56,8 @@ winget install th-ch.YouTubeMusic
 
 ## Available plugins:
 
+- **API**: Enables a REST API that can be used to view song info and control the player - See [here](https://github.com/Zo-Bro-23/youtube-music-api) for documentation
+
 - **Ad Blocker**: Block all ads and tracking out of the box
 
 - **Audio Compressor**: Apply compression to audio (lowers the volume of the loudest parts of the signal and raises the volume of the softest parts)

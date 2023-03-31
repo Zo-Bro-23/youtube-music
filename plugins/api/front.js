@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron');
 
 module.exports = () => {
     let currentStatus
-    
+
     function getLikeStatus(currentVideoId = document.querySelector('#movie_player')?.getPlayerResponse()?.videoDetails?.videoId) {
         const playerBar = document.querySelector("ytmusic-player-bar");
         const likedVideos = playerBar?.getState()?.likeStatus?.videos;
@@ -17,7 +17,7 @@ module.exports = () => {
     }
 
     const loop = () => {
-        if (currentStatus !== getLikeStatus()) ipcRenderer.send('m-api-like-button-status', getLikeStatus())
+        if (currentStatus !== getLikeStatus()) ipcRenderer.send('api-like-button-status', getLikeStatus())
         currentStatus = getLikeStatus()
         setTimeout(loop, 100)
     }
