@@ -5,7 +5,7 @@ const { setOptions, getOptions } = require("../../config/plugins");
 const promptOptions = require("../../providers/prompt-options");
 const axios = require("axios");
 
-const { getKey } = require('./back')
+const { getKey } = require("./back");
 
 module.exports = (win, options) => [
     {
@@ -15,17 +15,17 @@ module.exports = (win, options) => [
 ];
 
 async function setKey(win) {
-    const options = getOptions("api")
-    const key = await getKey(options)
+    const options = getOptions("api");
+    const key = await getKey(options);
 
     let output = await prompt({
-        title: 'Set API key',
-        label: 'Enter new API key:',
+        title: "Set API key",
+        label: "Enter new API key:",
         value: key,
         type: "input",
         width: 450,
         ...promptOptions()
-    }, win)
+    }, win);
 
     if (output) {
         options.key = output;
@@ -33,15 +33,15 @@ async function setKey(win) {
             await axios.put("https://youtube-music-api.zohan.tech/api/key", { key, newKey: output });
             setOptions("api", options);
         } catch (err) {
-            if (err.response.data.error == 'New key already exists') {
-                console.warn('New key already exists')
+            if (err.response.data.error == "New key already exists") {
+                console.warn("New key already exists");
                 setOptions("api", options);
                 dialog.showMessageBox(win, {
-                    message: 'The key you entered is already in use; if this is not your key, please set a different key to prevent device overlap.',
-                    type: 'warning',
-                    buttons: ['Ok'],
-                    title: 'Warning: Key exists!'
-                })
+                    message: "The key you entered is already in use; if this is not your key, please set a different key to prevent device overlap.",
+                    type: "warning",
+                    buttons: ["Ok"],
+                    title: "Warning: Key exists!"
+                });
             }
         }
     }
